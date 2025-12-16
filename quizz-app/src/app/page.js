@@ -1,26 +1,24 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { useAuth } from '@/context/AuthContext'; // Importujemy auth
+import { useAuth } from '@/context/AuthContext';
 import { db } from '@/lib/firebase';
 import { collection, getDocs } from 'firebase/firestore';
 import QuizCard from '@/components/QuizCard';
 import Link from 'next/link';
 
 export default function Home() {
-  const { user, loading: authLoading } = useAuth(); // Pobieramy usera i stan ładowania auth
+  const { user, loading: authLoading } = useAuth();
 
   const [questions, setQuestions] = useState([]);
-  const [dataLoading, setDataLoading] = useState(true); // Stan ładowania pytań
+  const [dataLoading, setDataLoading] = useState(true);
   
-  // Scoring
   const [score, setScore] = useState(0);
   const [totalMaxScore, setTotalMaxScore] = useState(0);
   const [answeredCount, setAnsweredCount] = useState(0);
   const [showResult, setShowResult] = useState(false);
 
-  // Pobieranie pytań - uruchamiamy TYLKO jeśli jest user
   useEffect(() => {
-    if (!user) return; // Jeśli nie ma usera, nie pobieraj pytań
+    if (!user) return; 
 
     const fetchQuestions = async () => {
       try {
@@ -41,7 +39,7 @@ export default function Home() {
     };
 
     fetchQuestions();
-  }, [user]); // Zależność od [user]
+  }, [user]); 
 
   const handleAnswer = (pointsEarned) => {
     setScore(prev => prev + pointsEarned);
@@ -57,7 +55,6 @@ export default function Home() {
     window.location.reload();
   };
 
-  // --- 1. EKRAN ŁADOWANIA (Gdy Firebase sprawdza usera) ---
   if (authLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -66,7 +63,6 @@ export default function Home() {
     );
   }
 
-  // --- 2. EKRAN POWITALNY (Dla niezalogowanych) ---
   if (!user) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[80vh] text-center px-4">
@@ -92,12 +88,9 @@ export default function Home() {
       </div>
     );
   }
-
-  // --- 3. WIDOK DLA ZALOGOWANYCH (Quiz) ---
   
   if (dataLoading) return <div className="text-center p-10 text-purple-600">Przygotowywanie pytań...</div>;
 
-  // Widok wyniku
   if (showResult) {
     const percentage = totalMaxScore > 0 ? Math.round((score / totalMaxScore) * 100) : 0;
     let message = "Dobra robota!";
@@ -126,7 +119,6 @@ export default function Home() {
     );
   }
 
-  // Widok listy pytań
   return (
     <div className="pb-24">
       <div className="bg-white rounded-t-lg border-t-8 border-purple-600 shadow-sm p-6 mb-6">

@@ -13,14 +13,12 @@ export default function Dashboard() {
   const [questions, setQuestions] = useState([]);
   const [editingQuestion, setEditingQuestion] = useState(null);
 
-  // 1. OCHRONA: Przekierowanie, jeśli brak użytkownika
   useEffect(() => {
     if (!loading && !user) {
       router.push('/login');
     }
   }, [user, loading, router]);
 
-  // 2. POBIERANIE DANYCH (Tylko gdy jest użytkownik)
   useEffect(() => {
     if (!user) return;
     
@@ -36,7 +34,6 @@ export default function Dashboard() {
     return () => unsubscribe();
   }, [user]);
 
-  // --- LOGIKA EDYCJI/USUWANIA ---
   const handleDelete = async (id) => {
     if (confirm("Czy na pewno chcesz usunąć to pytanie?")) {
       await deleteDoc(doc(db, "questions", id));
@@ -52,9 +49,6 @@ export default function Dashboard() {
     setEditingQuestion(null);
   };
 
-  // --- 3. KLUCZOWY MOMENT: BLOKADA WIDOKU ---
-  
-  // A) Jeśli Firebase jeszcze sprawdza, czy jesteś zalogowany -> Pokaż ekran ładowania
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -63,22 +57,18 @@ export default function Dashboard() {
     );
   }
 
-  // B) Jeśli skończył sprawdzać i nie ma usera -> Nie pokazuj NIC (bo useEffect zaraz przekieruje)
   if (!user) {
     return null; 
   }
 
-  // C) Jeśli jesteś tu, to znaczy że jesteś zalogowany -> Pokaż Panel
   return (
     <div className="max-w-3xl mx-auto pb-20 pt-6">
       
-      {/* Nagłówek Panelu */}
       <div className="bg-white p-6 rounded-lg shadow-sm mb-6 border-l-4 border-purple-600">
         <h1 className="text-2xl font-bold text-gray-800">Panel Zarządzania</h1>
         <p className="text-gray-500">Zalogowany jako: <span className="font-bold text-purple-600">{user.email}</span></p>
       </div>
 
-      {/* Kreator */}
       <div className="mb-10">
         <QuestionCreator 
           questionToEdit={editingQuestion} 
@@ -87,7 +77,6 @@ export default function Dashboard() {
         />
       </div>
 
-      {/* Lista Pytań */}
       <h2 className="text-xl font-bold text-gray-700 mb-4 pl-2 border-l-4 border-gray-300">
         Twoje Pytania ({questions.length})
       </h2>
@@ -127,7 +116,6 @@ export default function Dashboard() {
   );
 }
 
-// Funkcja pomocnicza
 function translateType(type) {
   switch(type) {
     case 'single_choice': return 'Pojedynczy';
