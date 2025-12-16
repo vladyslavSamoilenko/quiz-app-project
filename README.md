@@ -1,92 +1,92 @@
-# 🎓 QuizApp - System Egzaminacyjny
+# 🎓 QuizApp - Examination System
 
-Nowoczesna aplikacja webowa typu Full-Stack służąca do przeprowadzania testów wiedzy i egzaminów. Projekt umożliwia tworzenie zaawansowanych pytań, zarządzanie nimi w panelu administratora oraz przeprowadzanie interaktywnych quizów z systemem punktacji.
+A modern Full-Stack web application designed for conducting knowledge tests and exams. The project features a robust question creator, an administration panel, and an interactive quiz interface with a scoring system.
 
-**Projekt wykonany w ramach zaliczenia przedmiotu: Frameworki Frontendowe.**
+**Project created for the "Frontend Frameworks" course.**
 
-🔗 **[Zobacz Demo Live](https://quiz-app-project-two.vercel.app/)** 
+🔗 **[Live Demo](https://quiz-app-project-two.vercel.app/)**
 
 ---
 
-## 🚀 Technologie
+## 🚀 Tech Stack
 
-Projekt został zbudowany w oparciu o najnowsze standardy webowe:
+The project is built using modern web standards:
 
 * **Framework:** [Next.js 15](https://nextjs.org/) (App Router)
-* **Język:** JavaScript (ES6+) / React
-* **Baza Danych & Auth:** [Firebase](https://firebase.google.com/) (Firestore & Authentication)
-* **Style:** [Tailwind CSS](https://tailwindcss.com/) (RWD, nowoczesny design)
-* **Hosting:** [Vercel](https://vercel.com/)
+* **Language:** JavaScript (ES6+) / React
+* **Backend & Auth:** [Firebase](https://firebase.google.com/) (Firestore Database & Authentication)
+* **Styling:** [Tailwind CSS](https://tailwindcss.com/) (Fully Responsive Design)
+* **Deployment:** [Vercel](https://vercel.com/)
 
 ---
 
-## 🛠 Funkcjonalności
+## 🛠 Key Features
 
-### 🔐 Uwierzytelnianie i Bezpieczeństwo
-* Rejestracja i Logowanie użytkowników (Firebase Auth).
-* **Ochrona tras (Protected Routes):** Panel administratora dostępny tylko dla zalogowanych.
-* Blokada widoku treści dla niezalogowanych użytkowników.
+### 🔐 Authentication & Security
+* **User System:** Secure Registration and Login via Firebase Auth.
+* **Protected Routes:** The Dashboard is strictly accessible only to authenticated users.
+* **Content Protection:** Exam questions are hidden from non-logged-in guests.
 
-### 📝 Panel Administratora (Dashboard)
-* **CRUD Pytań:** Tworzenie, Edycja i Usuwanie pytań w czasie rzeczywistym.
-* **Kreator Pytań:** Obsługa 4 typów pytań:
-    1.  **Pojedynczy wybór** (Single Choice).
-    2.  **Wielokrotny wybór** (Multiple Choice) – z możliwością punktowania każdej opcji.
-    3.  **Dopasowanie par** (Matching Pairs).
-    4.  **Uzupełnianie luk** (Fill in the Blanks) – z systemem punktacji za każdą lukę.
-* Możliwość przypisywania różnej wagi punktowej dla pytań.
+### 📝 Admin Dashboard
+* **CRUD Operations:** Create, Read, Update, and Delete questions in real-time.
+* **Advanced Question Creator:** Support for 4 distinct question types:
+    1.  **Single Choice**
+    2.  **Multiple Choice** (with custom point weights for specific options)
+    3.  **Matching Pairs** (Drag & Drop logic simulation)
+    4.  **Fill in the Blanks** (Sentence building with dropdowns and scoring weights per blank)
+* **Scoring Control:** Ability to assign different point values to questions.
 
-### 🎓 System Egzaminacyjny (Frontend)
-* Interfejs inspirowany **Google Forms**.
-* Losowa kolejność pytań przy każdym podejściu.
-* Tryb "Egzaminu": Użytkownik nie widzi poprawnych odpowiedzi w trakcie rozwiązywania.
-* **System Punktacji:** Zliczanie punktów (również cząstkowych) i obliczanie wyniku procentowego.
-* Ekran końcowy z podsumowaniem, oceną i możliwością powtórzenia testu.
+### 🎓 Exam Interface (Student View)
+* **Google Forms Style:** Clean and intuitive user interface.
+* **Randomization:** Questions are shuffled every time the quiz starts.
+* **Exam Mode:** Correct answers are hidden during the test.
+* **Smart Scoring:** Calculation of total points (including partial points) and percentage results.
+* **Result Summary:** Final screen displaying the score, percentage, and a motivational message.
 
 ---
 
-## ⚙️ Instalacja i Uruchomienie
+## ⚙️ Installation & Setup
 
-Aby uruchomić projekt lokalnie, wykonaj poniższe kroki:
+To run this project locally, follow these steps:
 
-1.  **Sklonuj repozytorium:**
+1.  **Clone the repository:**
     ```bash
-    git clone [https://github.com/vladyslavSamoilenko/quiz-app-project.git]
-    cd nazwa-repo
+    git clone https://github.com/vladyslavSamoilenko/quiz-app-project.git
+    cd quizz-app
     ```
 
-2.  **Zainstaluj zależności:**
+2.  **Install dependencies:**
     ```bash
     npm install
     ```
 
-3.  **Skonfiguruj zmienne środowiskowe:**
-    Utwórz plik `.env.local` w głównym folderze i wklej swoje klucze z Firebase:
+3.  **Configure Environment Variables:**
+    Create a `.env` file in the root directory and add your Firebase configuration keys:
 
     ```env
-    NEXT_PUBLIC_FIREBASE_API_KEY=twoj_klucz
-    NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=twoj_projekt.firebaseapp.com
-    NEXT_PUBLIC_FIREBASE_PROJECT_ID=twoj_projekt
-    NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=twoj_projekt.appspot.com
-    NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=twoje_id
-    NEXT_PUBLIC_FIREBASE_APP_ID=twoje_app_id
+    NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key
+    NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+    NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
+    NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
+    NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+    NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
     ```
 
-4.  **Uruchom serwer deweloperski:**
+4.  **Run the development server:**
     ```bash
     npm run dev
     ```
 
-5.  Otwórz przeglądarkę pod adresem `http://localhost:3000`.
+5.  Open your browser at `http://localhost:3000`.
 
 ---
 
-## 👤 Autor
+## 👤 Author
 
 **[Vladyslav Samoilenko]**
-* Student Informatyki (WSEI)
-* GitHub: [@TwojNick](https://github.com/TwojNick)
+* Computer Science Student (WSEI)
+* GitHub: https://github.com/vladyslavSamoilenko
 
 ---
 
-> Projekt stworzony w celach edukacyjnych. Wszelkie prawa zastrzeżone.
+> This project was created for educational purposes.
