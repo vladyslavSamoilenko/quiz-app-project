@@ -1,20 +1,27 @@
 'use client';
 import { useEffect, useState } from 'react';
+import { useAuth } from '@/context/AuthContext'; // Importujemy auth
 import { db } from '@/lib/firebase';
 import { collection, getDocs } from 'firebase/firestore';
 import QuizCard from '@/components/QuizCard';
 import Link from 'next/link';
 
 export default function Home() {
+  const { user, loading: authLoading } = useAuth(); // Pobieramy usera i stan ładowania auth
+
   const [questions, setQuestions] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [dataLoading, setDataLoading] = useState(true); // Stan ładowania pytań
   
+  // Scoring
   const [score, setScore] = useState(0);
-  const [totalMaxScore, setTotalMaxScore] = useState(0); 
+  const [totalMaxScore, setTotalMaxScore] = useState(0);
   const [answeredCount, setAnsweredCount] = useState(0);
   const [showResult, setShowResult] = useState(false);
 
+  // Pobieranie pytań - uruchamiamy TYLKO jeśli jest user
   useEffect(() => {
+    if (!user) return; // Jeśli nie ma usera, nie pobieraj pytań
+
     const fetchQuestions = async () => {
       try {
         const querySnapshot = await getDocs(collection(db, "questions"));
@@ -29,11 +36,12 @@ export default function Home() {
       } catch (error) {
         console.error("Błąd:", error);
       } finally {
-        setLoading(false);
+        setDataLoading(false);
       }
     };
+
     fetchQuestions();
-  }, []);
+  }, [user]); // Zależność od [user]
 
   const handleAnswer = (pointsEarned) => {
     setScore(prev => prev + pointsEarned);
@@ -49,11 +57,49 @@ export default function Home() {
     window.location.reload();
   };
 
-  if (loading) return <div className="text-center p-10 text-purple-600">Ładowanie quizu...</div>;
+  // --- 1. EKRAN ŁADOWANIA (Gdy Firebase sprawdza usera) ---
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-600"></div>
+      </div>
+    );
+  }
 
+  // --- 2. EKRAN POWITALNY (Dla niezalogowanych) ---
+  if (!user) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[80vh] text-center px-4">
+        <div className="bg-white p-10 rounded-2xl shadow-xl border-t-8 border-purple-600 max-w-lg w-full">
+          <div className="w-20 h-20 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mx-auto mb-6 text-3xl font-bold">
+            Q
+          </div>
+          <h1 className="text-4xl font-extrabold text-gray-800 mb-4">Witaj w QuizApp</h1>
+          <p className="text-gray-600 text-lg mb-8 leading-relaxed">
+            To jest system egzaminacyjny. Aby zobaczyć pytania i sprawdzić swoją wiedzę, musisz się zalogować.
+          </p>
+          
+          <div className="flex flex-col gap-3">
+            <Link href="/login" className="w-full bg-purple-600 text-white py-3 rounded-lg font-bold hover:bg-purple-700 transition shadow-md">
+              Zaloguj się
+            </Link>
+            <Link href="/register" className="w-full bg-white border-2 border-purple-600 text-purple-700 py-3 rounded-lg font-bold hover:bg-purple-50 transition">
+              Załóż konto
+            </Link>
+          </div>
+        </div>
+        <p className="mt-8 text-gray-400 text-sm">Projekt zaliczeniowy</p>
+      </div>
+    );
+  }
+
+  // --- 3. WIDOK DLA ZALOGOWANYCH (Quiz) ---
+  
+  if (dataLoading) return <div className="text-center p-10 text-purple-600">Przygotowywanie pytań...</div>;
+
+  // Widok wyniku
   if (showResult) {
     const percentage = totalMaxScore > 0 ? Math.round((score / totalMaxScore) * 100) : 0;
-    
     let message = "Dobra robota!";
     if (percentage === 100) message = "Perfekcyjnie! Jesteś mistrzem!";
     else if (percentage < 50) message = "Musisz jeszcze poćwiczyć.";
@@ -80,12 +126,14 @@ export default function Home() {
     );
   }
 
+  // Widok listy pytań
   return (
     <div className="pb-24">
       <div className="bg-white rounded-t-lg border-t-8 border-purple-600 shadow-sm p-6 mb-6">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">Wielki Test Wiedzy</h1>
         <p className="text-gray-600">Odpowiedz na wszystkie pytania i sprawdź swój wynik.</p>
         <p className="text-sm text-purple-600 font-bold mt-2">Maksymalnie do zdobycia: {totalMaxScore} pkt</p>
+        <p className="text-xs text-gray-400 mt-4 text-right">Zalogowano jako: {user.email}</p>
       </div>
 
       {questions.length === 0 ? (
